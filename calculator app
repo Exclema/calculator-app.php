@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multipurpose Calculator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        form {
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Multipurpose Calculator</h1>
+
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <label for="num1">Number 1:</label>
+        <input type="number" name="num1" id="num1" required>
+
+        <label for="num2">Number 2:</label>
+        <input type="number" name="num2" id="num2" >  <label for="operation">Operation:</label>
+        <select name="operation" id="operation">
+            <option value="add">Addition (+)</option>
+            <option value="subtract">Subtraction (-)</option>
+            <option value="multiply">Multiplication (*)</option>
+            <option value="divide">Division (/)</option>
+            <option value="exponent">Exponentiation (^)</option>
+            <option value="percentage">Percentage (%)</option>
+            <option value="sqrt">Square Root (√)</option>
+            <option value="log">Logarithm (log)</option>
+        </select>
+
+        <input type="submit" value="Calculate">
+    </form>
+
+    <div id="result">
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $num1 = $_POST["num1"];
+            $num2 = isset($_POST["num2"]) && !empty($_POST["num2"]) ? $_POST["num2"] : null; // Handle optional num2
+            $operation = $_POST["operation"];
+
+            switch ($operation) {
+                case "add":
+                    $result = $num1 + $num2;
+                    break;
+                case "subtract":
+                    $result = $num1 - $num2;
+                    break;
+                case "multiply":
+                    $result = $num1 * $num2;
+                    break;
+                case "divide":
+                    if ($num2 == 0) {
+                        $result = "Division by zero!";
+                    } else {
+                        $result = $num1 / $num2;
+                    }
+                    break;
+                case "exponent":
+                    $result = $num1 ** $num2;  // or pow($num1, $num2);
+                    break;
+                case "percentage":
+                    if ($num2 !== null) { // percentage of num1
+                        $result = ($num1 / 100) * $num2;
+                    } else { // percentage of num1 (num1%)
+                        $result = $num1 / 100;
+                    }
+
+                    break;
+                case "sqrt":
+                    $result = sqrt($num1);
+                    break;
+                case "log":
+                    $result = log10($num1); // You can use log() for natural logarithm
+                    break;
+                default:
+                    $result = "Invalid operation";
+            }
+
+            echo "Result: " . $result;
+        }
+        ?>
+    </div>
+
+</body>
+</html>
